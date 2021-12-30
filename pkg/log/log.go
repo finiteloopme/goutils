@@ -47,3 +47,11 @@ func Warn(msg string, err error) {
 func Debug(msg string) {
 	log.Debug(msg)
 }
+
+// Log at Fatal level.  Sequence is:
+// 1. Log the actual error
+// 2. Exit with code 1
+func Fatal(err error) {
+	log.Error(err)
+	os.Exit(1)
+}
