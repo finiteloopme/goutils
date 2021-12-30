@@ -1,10 +1,9 @@
-package log
-
 // A simple log utility.
 // Supports following two log formats.  Set environment variable `LOG_FORMAT` to the corresponding value:
 // 1. json
 // 2. text
 // Text format is the default
+package log
 
 import (
 	"os"
