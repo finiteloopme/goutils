@@ -19,9 +19,9 @@ func IsRuntimeGCP() bool {
 }
 
 // Get the GCP project ID
-func GetPRojectID() string {
+func GetProjectID() string {
 	c := metadata.NewClient(&http.Client{Transport: userAgentTransport{
-		userAgent: "my-user-agent",
+		userAgent: "kl-gcp-user-agent",
 		base:      http.DefaultTransport,
 	}})
 	p, err := c.ProjectID()
