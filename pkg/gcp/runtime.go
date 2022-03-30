@@ -10,7 +10,7 @@ import (
 // Check if the runtime platform is GCP
 // Return true if GCP
 func IsRuntimeGCP() bool {
-	p := GetPRojectID()
+	p := GetProjectID()
 	if p != "" {
 		return true
 	} else {
