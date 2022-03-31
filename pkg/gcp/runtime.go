@@ -1,15 +1,23 @@
 package gcp
 
 import (
+	"io/ioutil"
+	"runtime"
+	"strings"
+
 	"cloud.google.com/go/compute/metadata"
-	"github.com/finiteloopme/goutils/pkg/log"
 )
 
 // Check if the runtime platform is GCP
 // Return true if GCP
 func IsRuntimeGCP() bool {
-	p := GetProjectID()
-	if p != "" {
+	if runtime.GOOS != "linux" {
+		return false
+	}
+
+	_product_name, _ := ioutil.ReadFile("/sys/class/dmi/id/product_name")
+	product_name := strings.TrimSpace(string(_product_name))
+	if strings.Contains(product_name, "Google") {
 		return true
 	} else {
 		return false
@@ -26,15 +34,16 @@ func GetProjectID() string {
 	// 	Timeout: 1000000000, // 1 sec timeout
 	// })
 	// p, err := c.ProjectID()
-	p, err := metadata.ProjectID()
 
-	if err != nil {
-		log.Fatal(err)
+	if IsRuntimeGCP() {
+		p, _ := metadata.ProjectID()
+		return p
+	} else {
+		return ""
 	}
-	return p
 }
 
-// userAgentTransport sets the User-Agent header before calling base.
+// // userAgentTransport sets the User-Agent header before calling base.
 // type userAgentTransport struct {
 // 	userAgent string
 // 	base      http.RoundTripper
