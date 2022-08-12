@@ -8,6 +8,9 @@ ensure-deps:
 build: ensure-deps
 	go build ./pkg/...
 
+install-local: build
+	go install ./pkg/...
+	
 test: 
 	go test ./pkg/... ./cmd/...
 
