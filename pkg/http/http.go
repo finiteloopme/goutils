@@ -12,9 +12,9 @@ import (
 
 // Config for HTTP Server
 type HTTPConfig struct {
-  // Set env variable GCP_HOST. Default value is 0.0.0.0
+	// Set env variable GCP_HOST. Default value is 0.0.0.0
 	Host string `default:"0.0.0.0"`
-  // Set env variable GCP_PORT. Default value is 8080
+	// Set env variable GCP_PORT. Default value is 8080
 	Port string `default:"8080"`
 }
 
