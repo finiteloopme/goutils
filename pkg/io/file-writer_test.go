@@ -10,7 +10,7 @@ var test_file_name string = "/tmp/goutils/"
 
 func setup(t testing.TB) func(testing.TB) {
 	// do init
-	test_file_name += time.Now().Format(time.RFC3339) + "/io-writer-test.txt"
+	test_dir_name += time.Now().Format(time.RFC3339) + "/io-writer-test.txt"
 	// teardown
 	return func(t testing.TB) {
 
@@ -22,12 +22,12 @@ func TestWrite(t *testing.T) {
 	defer teardown(t)
 	expectedContent := "This is file is used for unit testing of io.Writer implementaiton in goutils"
 
-	fw := FileWriter{Filename: test_file_name}
+	fw := FileWriter{Filename: test_dir_name}
 	fw.Write([]byte(expectedContent))
 
-	readContents, err := os.ReadFile(test_file_name)
+	readContents, err := os.ReadFile(test_dir_name)
 	if err != nil {
-		t.Fatalf("Error reading file [%v]", test_file_name)
+		t.Fatalf("Error reading file [%v]", test_dir_name)
 	}
 
 	if string(readContents) != expectedContent {
