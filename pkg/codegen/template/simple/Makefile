@@ -7,12 +7,13 @@ create-module:
 	go mod init ${MOD_FQ_NAME}
 
 fmt-deps:
-	go vet
-	go fmt
+	# go vet
+	# go fmt
 	go mod tidy
 
 build: fmt-deps
-	go build -o ${OUTPUT_FOLDER}/${BINARY_NAME} ./...
+	go build -o ${OUTPUT_FOLDER}/${BINARY_NAME} ./${CMD_NAME}/...
+	# go build ./pkg/...
 
 run: 
 	go run ${CMD_NAME}/main.go
