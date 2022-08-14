@@ -10,7 +10,8 @@ var tempFileLocation string = "/tmp"
 func setup(t testing.TB) func(t testing.TB) {
 	// do init
 	tempFileLocation += "/goutils/"
-	tempFileLocation += time.Now().Format(time.RFC3339)
+	// tempFileLocation += time.Now().Format(time.RFC3339)
+	tempFileLocation += time.Now().Format("20060201-15.04.05.00000")
 	// teardown
 	return func(t testing.TB) {
 

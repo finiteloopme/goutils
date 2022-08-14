@@ -21,5 +21,9 @@ build: fmt-deps
 run: 
 	go run ${CMD_NAME}/main.go
 
+# Ensure `create-module` target has been executed once
 cloud-run:
-	gcloud run deploy ${APP_NAME} --platform=managed --allow-unauthenticated --region=${GCP_REGION}
+	gcloud run deploy ${APP_NAME} --platform=managed --allow-unauthenticated --region=${GCP_REGION} --source=.
+
+undeploy-cloud-run:
+	gcloud run services delete new-cr-go-module --platform=managed --region=us-central1 --quiet
