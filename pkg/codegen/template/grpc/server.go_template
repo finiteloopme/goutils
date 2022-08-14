@@ -1,0 +1,25 @@
+package internal
+
+import (
+	{{ .Api.Name}}{{ .Api.Version}} "{{ .FullyQualifiedModuleName}}/{{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}/{{ .Api.Name}}/{{ .Api.Version}}"
+	grpcUtil "github.com/finiteloopme/goutils/pkg/grpc"
+	"google.golang.org/grpc"
+)
+
+// todo: Fix hardcoding of Hello in this File
+type MyHelloService struct {
+	// todo: fix hardcoding
+	{{ .Api.Name}}{{ .Api.Version}}.UnimplementedHelloServiceServer
+	grpcUtil.UnimplementedGRPCServer
+}
+
+func (quoteService MyHelloService) Register(server *grpc.Server) {
+	{{ .Api.Name}}{{ .Api.Version}}.RegisterHelloServiceServer(server, &MyHelloService{})
+}
+
+func RunServer() error {
+
+	var {{ .Api.Name}}Service MyHelloService
+	grpcUtil.RunGRPC({{ .Api.Name}}Service)
+	return nil
+}

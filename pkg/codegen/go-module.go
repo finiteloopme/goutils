@@ -20,81 +20,66 @@ const (
 	Folder        = "FOLDER"
 )
 
-type ApiStructure struct {
-	// name of the API
-	Name string
-	// API version
-	Version string `default:"v1"`
-	// Location for the generated code. Relative to parent
-	CodeGenLocation string `default:"gen/proto/go"`
-	Type            FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
-}
-
 type ApiType struct {
 	Parentfolder string `default:"api"`
-	Apis         []ApiStructure
-	Type         FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
+	// name of the API
+	Name string `default:"user"`
+	// API version
+	Version string `default:"v1alpha1"`
+	// Location for the generated code. Relative to parent
+	CodeGenLocation string `default:"gen/proto/go"`
 }
 
 type OutPutStructure struct {
 	Foldername string `default:"bin"`
 	Binaryname string
-	Type       FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type CmdStructure struct {
 	Foldername string `default:"cmd"`
-	Type       FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type PkgStructure struct {
 	Foldername string `default:"pkg"`
-	Type       FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type InternalStructure struct {
 	Foldername string `default:"internal"`
-	Type       FSType `default:"FOLDER"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type MakefileStructure struct {
 	Filename string `default:"Makefile"`
-	Type     FSType `default:"FILE"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type ReadmeStructure struct {
 	Filename string `default:"README.md"`
-	Type     FSType `default:"FILE"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
 }
 
 type DockerStructure struct {
 	Filename string `default:"Dockerfile"`
-	Type     FSType `default:"FILE"`
-	// Ignore for internal use only
-	ignore bool `default:"false"`
+}
+
+type BufYamlStructure struct {
+	Filename string `default:"buf.yaml"`
+}
+type BufGenYamlStructure struct {
+	Filename string `default:"buf.gen.yaml"`
+}
+
+type BufWorkYamlStructure struct {
+	Filename string `default:"buf.work.yaml"`
+}
+
+type ServerGoStructure struct {
+	Filename string `default:"server.go"`
+}
+
+type UserGoStructure struct {
+	Filename string `default:"user.proto"`
 }
 
 //go:embed template
 var templatesFS embed.FS
-
-// // go:embed template/simple/main.go_template
-// var simpleMainTemplateFS embed.FS
 
 // TODO: buf.build
 // 1. buf.yaml
@@ -106,16 +91,18 @@ type ProjectStructure struct {
 	Projectname              string
 	FullyQualifiedModuleName string
 	Api                      ApiType
+	BufYaml                  BufYamlStructure
+	User                     UserGoStructure
 	Out                      OutPutStructure
 	Cmd                      CmdStructure
 	Pkg                      PkgStructure
 	Internal                 InternalStructure
-	Type                     FSType `default:"FOLDER"`
+	ServerGo                 ServerGoStructure
 	Make                     MakefileStructure
 	ReadMe                   ReadmeStructure
 	Dockerfile               DockerStructure
-	// Ignore for internal use only
-	ignore bool `default:"false"`
+	BufGenYaml               BufGenYamlStructure
+	BufWorkYaml              BufWorkYamlStructure
 }
 
 // Create a go module with the given name
@@ -192,6 +179,56 @@ func NewCloudRunGoModule(moduleName string, fullyQualifiedModuleName string, out
 
 	// Dockerfile
 	projStruct.parseTemplate("template/cloudrun/Dockerfile_template", outputDir+"/"+projStruct.Dockerfile.Filename)
+
+	return projStruct
+}
+
+func NewGRPCGoModule(moduleName string, fullyQualifiedModuleName string, outputDir string) ProjectStructure {
+	var projStruct ProjectStructure
+	// var err error
+	envconfig.Process("", &projStruct)
+
+	// Projectname
+	projStruct.Projectname = moduleName
+
+	// FullyQualifiedModuleName
+	projStruct.FullyQualifiedModuleName = fullyQualifiedModuleName
+
+	// Api
+	io.CreateDir(outputDir + "/" + projStruct.Api.Parentfolder + "/" + projStruct.Api.Name + "/" + projStruct.Api.Version)
+	projStruct.parseTemplate("template/grpc/buf.yaml_template",
+		outputDir+"/"+projStruct.Api.Parentfolder+"/"+projStruct.BufYaml.Filename)
+	projStruct.parseTemplate("template/grpc/user.proto_template",
+		outputDir+"/"+projStruct.Api.Parentfolder+"/"+projStruct.Api.Name+"/"+projStruct.Api.Version+"/"+projStruct.User.Filename)
+
+	// Out
+	projStruct.Out.Binaryname = moduleName
+	io.CreateDir(outputDir + "/" + projStruct.Out.Foldername)
+
+	// Cmd
+	io.CreateDir(outputDir + "/" + projStruct.Cmd.Foldername)
+	projStruct.parseTemplate("template/grpc/main.go_template", outputDir+"/"+projStruct.Cmd.Foldername+"/main.go")
+
+	// Pkg
+	io.CreateDir(outputDir + "/" + projStruct.Pkg.Foldername)
+
+	// Internal
+	io.CreateDir(outputDir + "/" + projStruct.Internal.Foldername)
+	projStruct.parseTemplate("template/grpc/server.go_template",
+		outputDir+"/"+projStruct.Internal.Foldername+"/"+projStruct.ServerGo.Filename)
+
+	// Makefile
+	projStruct.parseTemplate("template/grpc/Makefile", outputDir+"/"+projStruct.Make.Filename)
+
+	// Dockerfile
+	projStruct.parseTemplate("template/grpc/Dockerfile_template", outputDir+"/"+projStruct.Dockerfile.Filename)
+
+	// buf.gen.yaml
+	projStruct.parseTemplate("template/grpc/buf.gen.yaml_template",
+		outputDir+"/"+projStruct.BufGenYaml.Filename)
+	// buf.work.yaml
+	projStruct.parseTemplate("template/grpc/buf.work.yaml_template",
+		outputDir+"/"+projStruct.BufWorkYaml.Filename)
 
 	return projStruct
 }

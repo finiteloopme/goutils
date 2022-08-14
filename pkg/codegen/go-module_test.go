@@ -49,3 +49,19 @@ func TestCloudRunGoModule(t *testing.T) {
 			"Fully qualified name expected to be %v, received %v.", moduleName, projStruct.Projectname, fullyQualifiedModuleName, projStruct.FullyQualifiedModuleName)
 	}
 }
+
+func TestGRPCGoModule(t *testing.T) {
+	teardown := setup(t)
+	defer teardown(t)
+
+	moduleName := "new-grpc-go-module"
+	fullyQualifiedModuleName := "github.com/testrepo/" + moduleName
+	outputDir := tempFileLocation + "/grpc-golang"
+	t.Log("Creating temp project at: " + outputDir)
+	projStruct := NewGRPCGoModule(moduleName, fullyQualifiedModuleName, outputDir)
+
+	if (projStruct.Projectname != moduleName) && (projStruct.FullyQualifiedModuleName != fullyQualifiedModuleName) {
+		t.Fatalf("Module name expected to be %v, received %v. \n "+
+			"Fully qualified name expected to be %v, received %v.", moduleName, projStruct.Projectname, fullyQualifiedModuleName, projStruct.FullyQualifiedModuleName)
+	}
+}
