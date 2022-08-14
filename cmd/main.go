@@ -50,6 +50,10 @@ func ProcessCreateApp() {
 		// Example
 		// goutils create-app --name cloudrun-app --type go-cloudrun --fqdn-name github.com/finiteloopme/demo/cloudrun-app --output cloudrun-app
 		codegen.NewCloudRunGoModule(*appName, *fqdnName, *appLocation)
+	case "go-grpc":
+		// Example
+		// goutils create-app --name grpc-app --type go-grpc --fqdn-name github.com/finiteloopme/demo/grpc-app --output grpc-app
+		codegen.NewGRPCGoModule(*appName, *fqdnName, *appLocation)
 	default:
 		printUsage()
 		os.Exit(1)
