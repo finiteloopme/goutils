@@ -36,7 +36,7 @@ func printUsage() {
 
 func ProcessCreateApp() {
 	createAppCmd := flag.NewFlagSet(CREATE_APP, flag.ExitOnError)
-	appType := createAppCmd.String("type", "go-simple", "Application type.  Only 'go-simple' or 'go-cloudrun' is supported")
+	appType := createAppCmd.String("type", "go-simple", "Application type.  Only 'go-simple', 'go-cloudrun' or 'go-grpc' is supported")
 	appName := createAppCmd.String("name", "", "Application name")
 	fqdnName := createAppCmd.String("fqdn-name", "", "Fully qualified module name to use with `go mod init`")
 	appLocation := createAppCmd.String("output", *appName, "Folder name to host the app")
