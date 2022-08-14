@@ -1,0 +1,24 @@
+package main
+
+import (
+        "fmt"
+        log "github.com/finiteloopme/goutils/pkg/log"
+        "net/http"
+	goutilsHTTP "github.com/finiteloopme/goutils/pkg/http"
+        "os"
+)
+
+func main() {
+        log.Info("Starting server...")
+        http.HandleFunc("/hello", handler)
+	goutilsHTTP.StartHTTPServer()
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+        name := os.Getenv("NAME")
+        if name == "" {
+                name = "World"
+        }
+        log.Debug("In hello handler")
+        fmt.Fprintf(w, "Hello %s!\n", name)
+}

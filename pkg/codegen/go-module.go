@@ -83,8 +83,15 @@ type ReadmeStructure struct {
 	ignore bool `default:"false"`
 }
 
-//go:embed template/simple
-var simpleTemplateFS embed.FS
+type DockerStructure struct {
+	Filename string `default:"Dockerfile"`
+	Type     FSType `default:"FILE"`
+	// Ignore for internal use only
+	ignore bool `default:"false"`
+}
+
+//go:embed template
+var templatesFS embed.FS
 
 // // go:embed template/simple/main.go_template
 // var simpleMainTemplateFS embed.FS
@@ -106,6 +113,7 @@ type ProjectStructure struct {
 	Type                     FSType `default:"FOLDER"`
 	Make                     MakefileStructure
 	ReadMe                   ReadmeStructure
+	Dockerfile               DockerStructure
 	// Ignore for internal use only
 	ignore bool `default:"false"`
 }
@@ -145,11 +153,51 @@ func NewSimpleGoModule(moduleName string, fullyQualifiedModuleName string, outpu
 	// Makefile
 	projStruct.parseTemplate("template/simple/Makefile", outputDir+"/"+projStruct.Make.Filename)
 
+	// Dockerfile
+	// Ignored
+
+	return projStruct
+}
+
+func NewCloudRunGoModule(moduleName string, fullyQualifiedModuleName string, outputDir string) ProjectStructure {
+	var projStruct ProjectStructure
+	// var err error
+	envconfig.Process("", &projStruct)
+
+	// Projectname
+	projStruct.Projectname = moduleName
+
+	// FullyQualifiedModuleName
+	projStruct.FullyQualifiedModuleName = fullyQualifiedModuleName
+
+	// Api
+	// Ignored
+
+	// Out
+	projStruct.Out.Binaryname = moduleName
+	io.CreateDir(outputDir + "/" + projStruct.Out.Foldername)
+
+	// Cmd
+	io.CreateDir(outputDir + "/" + projStruct.Cmd.Foldername)
+	projStruct.parseTemplate("template/cloudrun/main.go_template", outputDir+"/"+projStruct.Cmd.Foldername+"/main.go")
+
+	// Pkg
+	io.CreateDir(outputDir + "/" + projStruct.Pkg.Foldername)
+
+	// Internal
+	io.CreateDir(outputDir + "/" + projStruct.Internal.Foldername)
+
+	// Makefile
+	projStruct.parseTemplate("template/cloudrun/Makefile", outputDir+"/"+projStruct.Make.Filename)
+
+	// Dockerfile
+	projStruct.parseTemplate("template/cloudrun/Dockerfile_template", outputDir+"/"+projStruct.Dockerfile.Filename)
+
 	return projStruct
 }
 
 func (p ProjectStructure) parseTemplate(templateFileName string, outputFileName string) {
-	tMake, err := template.ParseFS(simpleTemplateFS, templateFileName)
+	tMake, err := template.ParseFS(templatesFS, templateFileName)
 	if err != nil {
 		log.Fatal(err)
 	}

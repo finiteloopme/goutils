@@ -6,6 +6,7 @@ ensure-deps:
 	go mod vendor
 
 build: ensure-deps
+	go build -o bin/goutils ./cmd/main.go
 	go build ./pkg/...
 
 install-local: build
