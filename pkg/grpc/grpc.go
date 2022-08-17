@@ -38,8 +38,9 @@ func RunGRPC(service InterfaceGRPC, grpcConfig ...GRPCConfig) error {
 	// Use only the first grpcConfig and ignore the others
 	if len(grpcConfig) > 0 {
 		config = grpcConfig[0]
+	} else {
+		envconfig.Process("gcp", &config)
 	}
-	envconfig.Process("gcp", &config)
 	listenOn := config.GRPC_Host + ":" + config.GRPC_Port
 	listener, err := net.Listen("tcp", listenOn)
 	if err != nil {
