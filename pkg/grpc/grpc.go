@@ -9,6 +9,7 @@ import (
 	"net"
 
 	log "github.com/finiteloopme/goutils/pkg/log"
+	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
 )
 
@@ -34,6 +35,7 @@ type GRPCConfig struct {
 // Start the gRPC server
 func RunGRPC(service InterfaceGRPC) error {
 	var config GRPCConfig
+	envconfig.Process("gcp", &config)
 	listenOn := config.GRPC_Host + ":" + config.GRPC_Port
 	listener, err := net.Listen("tcp", listenOn)
 	if err != nil {
