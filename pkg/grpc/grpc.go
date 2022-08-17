@@ -36,7 +36,7 @@ type GRPCConfig struct {
 func RunGRPC(service InterfaceGRPC, grpcConfig ...GRPCConfig) error {
 	var config GRPCConfig
 	// Use only the first grpcConfig and ignore the others
-	if len(grpcConfig) > 0 && grpcConfig[0] != nil {
+	if len(grpcConfig) > 0 {
 		config = grpcConfig[0]
 	}
 	envconfig.Process("gcp", &config)
