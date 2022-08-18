@@ -55,3 +55,23 @@ func Fatal(err error) {
 	log.Error(err)
 	os.Exit(1)
 }
+
+// Implementing pkg/log/Logger interface
+type Logger struct {
+}
+
+func (logger Logger) Debugf(format string, args ...interface{}) {
+	log.Debugf(format+"\n", args...)
+}
+
+func (logger Logger) Infof(format string, args ...interface{}) {
+	log.Infof(format+"\n", args...)
+}
+
+func (logger Logger) Warnf(format string, args ...interface{}) {
+	log.Warnf(format+"\n", args...)
+}
+
+func (logger Logger) Errorf(format string, args ...interface{}) {
+	log.Errorf(format+"\n", args...)
+}
