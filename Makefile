@@ -13,7 +13,6 @@ install-local: build
 	go install ./pkg/...
 	
 test: 
-	go test ./pkg/...
-	go test ./pkg/... -cover
+	go test ./pkg/... -v -cover
 
 release:
