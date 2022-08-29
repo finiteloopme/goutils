@@ -18,6 +18,9 @@ build: fmt-deps
 	go build -o ${OUTPUT_FOLDER}/${BINARY_NAME} ./${CMD_NAME}/...
 	# go build ./pkg/...
 
+test:
+	go test ./... -v -cover
+	
 run: 
 	go run ${CMD_NAME}/main.go
 

@@ -17,3 +17,6 @@ build: fmt-deps
 
 run: 
 	go run ${CMD_NAME}/main.go
+
+test:
+	go test ./... -v -cover
