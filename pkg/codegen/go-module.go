@@ -227,6 +227,9 @@ func NewGRPCGoModule(moduleName string, fullyQualifiedModuleName string, outputD
 	// Makefile
 	projStruct.parseTemplate("template/grpc/Makefile", outputDir+"/"+projStruct.Make.Filename)
 
+	// README.md file
+	projStruct.parseTemplate("template/grpc/README_build.md", outputDir+"/"+projStruct.ReadMe.Filename)
+
 	// Dockerfile
 	projStruct.parseTemplate("template/grpc/Dockerfile_template", outputDir+"/"+projStruct.Dockerfile.Filename)
 
