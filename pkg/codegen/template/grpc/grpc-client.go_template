@@ -1,0 +1,42 @@
+package client
+
+import (
+	"context"
+	"fmt"
+
+	// userv1alpha1 "github.com/finiteloopme/demo/hello/api/gen/proto/go/user/v1alpha1"
+	{{ .Api.Name}}{{ .Api.Version}} "{{ .FullyQualifiedModuleName}}/{{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}/{{ .Api.Name}}/{{ .Api.Version}}"
+	"github.com/finiteloopme/goutils/pkg/log"
+	"github.com/kelseyhightower/envconfig"
+	"google.golang.org/grpc"
+)
+
+// Config for gRPC Server
+type GRPCConfig struct {
+	// Set env variable GCP_GRPC_HOST. Default value is 0.0.0.0
+	GRPC_Host string `default:"0.0.0.0"`
+	// Set env variable GCP_GRPC_PORT. Default value is 8080
+	GRPC_Port string `default:"8080"`
+}
+
+func RunClient() {
+	log.Info("In gRPC Client")
+
+	var config GRPCConfig
+	envconfig.Process("gcp", &config)
+	connectTo := config.GRPC_Host + ":" + config.GRPC_Port
+	conn, err := grpc.Dial(connectTo, grpc.WithBlock(), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(fmt.Errorf("Error connecting to %s: %w", connectTo, err))
+	}
+	log.Info("Connecting to: " + connectTo)
+
+	helloService := {{ .Api.Name}}{{ .Api.Version}}.NewHelloServiceClient(conn)
+	resp, err := helloService.SayHello(context.Background(), &{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest{})
+	if err != nil {
+		log.Fatal(fmt.Errorf("Failed to invoke SayHello: %w", err))
+	}
+	log.Info(string(resp.Msg))
+
+	return
+}

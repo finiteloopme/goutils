@@ -29,4 +29,4 @@ cloud-run:
 	gcloud run deploy ${APP_NAME} --platform=managed --allow-unauthenticated --region=${GCP_REGION} --source=.
 
 undeploy-cloud-run:
-	gcloud run services delete new-cr-go-module --platform=managed --region=us-central1 --quiet
+	gcloud run services delete ${APP_NAME} --platform=managed --region=us-central1 --quiet

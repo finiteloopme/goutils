@@ -1,16 +1,30 @@
 package main
 
 import (
+	"flag"
+	"os"
+
+	client "{{ .FullyQualifiedModuleName}}/internal/client"
 	server "{{ .FullyQualifiedModuleName}}/internal"
 	"github.com/finiteloopme/goutils/pkg/log"
 )
 
 func main() {
+	cmdAppType := flag.NewFlagSet("", flag.ExitOnError)
+	appType := cmdAppType.String("type", "grpc-server", "Type of app.  Can be one of: grpc-server, grpc-and-rest, grpc-client")
+	cmdAppType.Parse(os.Args[1:])
 	log.Info("In main function")
-//	Run gRPC Service Only.
-	server.RunServer()
-	
-//	Uncomment to start a REST handler for the gRPC service.
-//	Ensure the gRPC server above is not being started
-//	server.RunWithHTTPHandler()
+	switch *appType {
+	case "grpc-server":
+		// Run gRPC Service Only.
+		server.RunServer()
+	case "grpc-and-rest":
+		// Start a REST handler for the gRPC service.
+		server.RunWithHTTPHandler()
+	case "grpc-client":
+		client.RunClient()
+	default:
+		log.Info("hello --type=grpc-server")
+		os.Exit(1)
+	}
 }

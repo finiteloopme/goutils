@@ -223,6 +223,10 @@ func NewGRPCGoModule(moduleName string, fullyQualifiedModuleName string, outputD
 		outputDir+"/"+projStruct.Internal.Foldername+"/"+projStruct.ServerGo.Filename)
 	projStruct.parseTemplate("template/grpc/server_test.go_template",
 		outputDir+"/"+projStruct.Internal.Foldername+"/"+projStruct.ServerTestGo.Filename)
+	// gRPC Client
+	io.CreateDir(outputDir + "/" + projStruct.Internal.Foldername + "/client")
+	projStruct.parseTemplate("template/grpc/grpc-client.go_template",
+		outputDir+"/"+projStruct.Internal.Foldername+"/client/"+"grpc-client.go")
 
 	// Makefile
 	projStruct.parseTemplate("template/grpc/Makefile", outputDir+"/"+projStruct.Make.Filename)
