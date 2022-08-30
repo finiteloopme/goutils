@@ -20,8 +20,8 @@ type InterfaceGRPC interface {
 type UnimplementedGRPCServer struct {
 }
 
-func (UnimplementedGRPCServer) Register(server *grpc.Server) {
-	return
+func (UnimplementedGRPCWithHTTPHandler) Register(server *grpc.Server) error {
+	return fmt.Errorf("Placeholder.  Interface not implemented")
 }
 
 // Config for gRPC Server

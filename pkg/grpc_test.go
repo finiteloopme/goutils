@@ -11,7 +11,7 @@ import (
 type TestHelloServer struct {
 	// todo: fix hardcoding
 	// userv1alpha1.UnimplementedHelloServiceServer
-	grpcUtils.UnimplementedGRPCServer
+	grpcUtils.UnimplementedGRPCWithHTTPHandler
 }
 
 func (quoteService TestHelloServer) Register(server *grpc.Server) {
