@@ -1,15 +1,21 @@
 version: v1
 plugins:
+# Golang types
 - name: go
   out: {{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}
   opt: paths=source_relative
+# gRPC service
 - name: go-grpc
   out: {{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}
   opt:
     - paths=source_relative
     - require_unimplemented_servers=false
+# HTTP proxy
 - name: grpc-gateway
   out: {{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}
   opt:
     - paths=source_relative
     - generate_unbound_methods=true
+# OpenAPI definition
+- name: openapiv2
+  out: {{ .Api.Parentfolder}}/gen/openapiv2
