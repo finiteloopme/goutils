@@ -5,6 +5,7 @@ import (
 
 	{{ .Api.Name}}{{ .Api.Version}} "{{ .FullyQualifiedModuleName}}/{{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}/{{ .Api.Name}}/{{ .Api.Version}}"
 	grpcUtil "github.com/finiteloopme/goutils/pkg/grpc"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
@@ -13,10 +14,15 @@ type MyHelloService struct {
 	// todo: fix hardcoding
 	{{ .Api.Name}}{{ .Api.Version}}.UnimplementedHelloServiceServer
 	grpcUtil.UnimplementedGRPCServer
+	grpcUtil.UnimplementedGRPCWithHTTPHandler
 }
 
 func (helloService MyHelloService) Register(server *grpc.Server) {
 	{{ .Api.Name}}{{ .Api.Version}}.RegisterHelloServiceServer(server, &MyHelloService{})
+}
+
+func (helloServivce MyHelloService) RegisterHTTPHandler(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	return {{ .Api.Name}}{{ .Api.Version}}.RegisterHelloServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
 }
 
 // TODO: Service logic should be implemented here
@@ -35,9 +41,17 @@ func (helloService MyHelloService) SayHello(ctx context.Context, req *{{ .Api.Na
 	return resp, nil
 }
 
+// Start the gRPC service
 func RunServer() error {
 
 	var {{ .Api.Name}}Service MyHelloService
 	grpcUtil.RunGRPC({{ .Api.Name}}Service)
 	return nil
+}
+
+// Start the gRPC Service and a corresponding HTTP/REST handler
+func RunWithHTTPHandler() error {
+	var userService MyHelloService
+
+	return grpcUtil.RunGRPCAndREST(userService)
 }

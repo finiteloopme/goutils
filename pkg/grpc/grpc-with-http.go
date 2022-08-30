@@ -7,6 +7,7 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
+	log "github.com/finiteloopme/goutils/pkg/log"
 	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -41,7 +42,9 @@ func StartHTTPProxy(service InterfaceGRPCWithHTTPHandler, config GRPCConfig) err
 	}
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(config.GRPC_Host+":"+config.HTTP_Port, mux)
+	listenOn := config.GRPC_Host + ":" + config.HTTP_Port
+	log.Info("Starting HTTP Handler for the gRPC service on: " + listenOn)
+	return http.ListenAndServe(listenOn, mux)
 }
 
 // Start a gRPC Service with a REST endpoint too

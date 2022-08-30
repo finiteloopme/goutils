@@ -7,5 +7,10 @@ import (
 
 func main() {
 	log.Info("In main function")
+//	Run gRPC Service Only.
 	server.RunServer()
+	
+//	Uncomment to start a REST handler for the gRPC service.
+//	Ensure the gRPC server above is not being started
+//	server.RunWithHTTPHandler()
 }

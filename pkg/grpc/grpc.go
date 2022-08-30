@@ -45,7 +45,7 @@ func RunGRPC(service InterfaceGRPC) error {
 	}
 	server := grpc.NewServer()
 	service.Register(server)
-	log.Info("Listening on: " + listenOn)
+	log.Info("Starting gRPC service on: " + listenOn)
 	if err := server.Serve(listener); err != nil {
 		return fmt.Errorf("Failed to start gRPC server: %w", err)
 	}
