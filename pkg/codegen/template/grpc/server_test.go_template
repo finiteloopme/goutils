@@ -1,0 +1,74 @@
+package internal
+
+import (
+	"context"
+	"testing"
+
+//	hellov1alpha1 "github.com/finiteloopme/demo/hello/api/gen/proto/go/hello/v1alpha1"
+	{{ .Api.Name}}{{ .Api.Version}} "{{ .FullyQualifiedModuleName}}/{{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}/{{ .Api.Name}}/{{ .Api.Version}}"
+	"google.golang.org/grpc/codes"
+
+	// gRPC Testing utility.  For "mocking" gRPC behaviour
+	// So the server doesn't listen for{}
+	grpcTesting "github.com/finiteloopme/goutils/pkg/grpc/testing"
+)
+
+func TestServer(t *testing.T) {
+	// Start the service
+	var helloService MyHelloService
+	conn, err := grpcTesting.RegisterTestServer(helloService)
+	if err != nil {
+		t.Errorf("Error registering gRPC server for testing: %v", err)
+	}
+	defer conn.Close()
+
+	// Tests to execute
+	tests := []struct {
+		testName string
+		req      *{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest
+		res      *{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse
+		errCode  codes.Code
+		eeMsg    string
+	}{
+		{
+			"Check Hello World",
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest{},
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse{Msg: []byte("Hello, World")},
+			codes.OK,
+			"",
+		},
+		{
+			"Check - Kunal",
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest{User: &{{ .Api.Name}}{{ .Api.Version}}.User{
+				FirstName: "Kunal",
+			}},
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse{Msg: []byte("Hello, Kunal")},
+			codes.OK,
+			"",
+		},
+		{
+			"Check - Kunal Limaye",
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest{User: &{{ .Api.Name}}{{ .Api.Version}}.User{
+				FirstName: "Kunal",
+				LastName:  "Limaye",
+			}},
+			&{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse{Msg: []byte("Hello, Kunal Limaye")},
+			codes.OK,
+			"",
+		},
+	}
+	client := {{ .Api.Name}}{{ .Api.Version}}.NewHelloServiceClient(conn)
+	for _, tt := range tests {
+		t.Run(tt.testName, func(t *testing.T) {
+			// request := &{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest{Message: tt.msg}
+			actual, err := client.SayHello(context.Background(), tt.req)
+			if err != nil {
+				t.Errorf("Encounter error, %v", err)
+			}
+			if string(tt.res.Msg) != string(actual.Msg) {
+				t.Errorf("Expected response %v, got %v", string(tt.res.Msg), string(actual.Msg))
+			}
+		})
+	}
+}
+

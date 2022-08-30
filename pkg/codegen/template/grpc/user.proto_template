@@ -25,7 +25,7 @@ message SayHelloRequest{
 }
 
 message SayHelloResponse{
-    User user = 1;
+    bytes msg = 1;
     google.type.DateTime responded_at = 2;
 }
 

@@ -74,6 +74,10 @@ type ServerGoStructure struct {
 	Filename string `default:"server.go"`
 }
 
+type ServerTestGoStructure struct {
+	Filename string `default:"server_test.go"`
+}
+
 type UserGoStructure struct {
 	Filename string `default:"user.proto"`
 }
@@ -98,6 +102,7 @@ type ProjectStructure struct {
 	Pkg                      PkgStructure
 	Internal                 InternalStructure
 	ServerGo                 ServerGoStructure
+	ServerTestGo             ServerTestGoStructure
 	Make                     MakefileStructure
 	ReadMe                   ReadmeStructure
 	Dockerfile               DockerStructure
@@ -216,6 +221,8 @@ func NewGRPCGoModule(moduleName string, fullyQualifiedModuleName string, outputD
 	io.CreateDir(outputDir + "/" + projStruct.Internal.Foldername)
 	projStruct.parseTemplate("template/grpc/server.go_template",
 		outputDir+"/"+projStruct.Internal.Foldername+"/"+projStruct.ServerGo.Filename)
+	projStruct.parseTemplate("template/grpc/server_test.go_template",
+		outputDir+"/"+projStruct.Internal.Foldername+"/"+projStruct.ServerTestGo.Filename)
 
 	// Makefile
 	projStruct.parseTemplate("template/grpc/Makefile", outputDir+"/"+projStruct.Make.Filename)

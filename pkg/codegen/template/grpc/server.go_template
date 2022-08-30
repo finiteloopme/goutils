@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"context"
+
 	{{ .Api.Name}}{{ .Api.Version}} "{{ .FullyQualifiedModuleName}}/{{ .Api.Parentfolder}}/{{ .Api.CodeGenLocation}}/{{ .Api.Name}}/{{ .Api.Version}}"
 	grpcUtil "github.com/finiteloopme/goutils/pkg/grpc"
 	"google.golang.org/grpc"
@@ -13,8 +15,24 @@ type MyHelloService struct {
 	grpcUtil.UnimplementedGRPCServer
 }
 
-func (quoteService MyHelloService) Register(server *grpc.Server) {
+func (helloService MyHelloService) Register(server *grpc.Server) {
 	{{ .Api.Name}}{{ .Api.Version}}.RegisterHelloServiceServer(server, &MyHelloService{})
+}
+
+// TODO: Service logic should be implemented here
+func (helloService MyHelloService) SayHello(ctx context.Context, req *{{ .Api.Name}}{{ .Api.Version}}.SayHelloRequest) (*{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse, error) {
+	greeting := "Hello, "
+	resp := &{{ .Api.Name}}{{ .Api.Version}}.SayHelloResponse{Msg: []byte(greeting + "World")}
+	if req.User != nil && req.User.FirstName != "" {
+		name := req.User.FirstName
+		if req.User.LastName != "" {
+			name = name + " " + req.User.LastName
+		}
+		resp.Msg = []byte(greeting + name)
+	}
+
+
+	return resp, nil
 }
 
 func RunServer() error {
