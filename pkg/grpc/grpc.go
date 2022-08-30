@@ -29,7 +29,9 @@ type GRPCConfig struct {
 	// Set env variable GCP_GRPC_HOST. Default value is 0.0.0.0
 	GRPC_Host string `default:"0.0.0.0"`
 	// Set env variable GCP_GRPC_PORT. Default value is 8080
-	GRPC_Port string `default:"8081"`
+	GRPC_Port string `default:"8080"`
+	// Set env variable GCP_HTTP_PORT. Default value is 8090
+	HTTP_Port string `default:"8090"`
 }
 
 // Start the gRPC server
