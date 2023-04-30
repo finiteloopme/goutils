@@ -1,7 +1,15 @@
 # goutils
 Collection of golang utilities
 
-# Create a Golang microservice
+# Usage
+1. Simple utility to start HTTP Server
+2. Log handler
+3. Environment variable reader
+4. Generates application scafold
+5. Random number generator
+
+# Build
+## Create a Golang microservice
 ```zsh
 # example usage
 goutils create-app \
@@ -11,7 +19,7 @@ goutils create-app \
     --output=hello
 ```
 
-# Configure basic build
+## Configure basic build
 ```zsh
 cd hello
 # Initiatlise basic Golang module
