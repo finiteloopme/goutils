@@ -29,7 +29,7 @@ func StartHTTPServer() {
 	if _, err := os.Stat("./index.html"); os.IsNotExist(err) {
 		// ./index.html doesn't exist
 		// Creating a simple handler
-		http.HandleFunc("/", defaultHandler)
+		http.Handle("/", DefaultHandler{})
 	} else {
 		// ./index.html exists. So serve the current directory
 		http.Handle("/", http.FileServer(http.Dir("./")))
@@ -39,7 +39,23 @@ func StartHTTPServer() {
 	http.ListenAndServe(listenAt, nil)
 }
 
-func defaultHandler(rw http.ResponseWriter, req *http.Request) {
+type DefaultHandler struct{}
+
+func (DefaultHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(rw, "Hello from the default handler")
-	return
+}
+
+// Data structure to keep a map of URL to the function handler
+type URLMap map[string]http.Handler
+
+// Register Handlers for URL
+func StartServer(opts ...URLMap) {
+	urlMap := URLMap{"/": DefaultHandler{}}
+	if len(opts) > 0 {
+		urlMap = opts[0]
+	}
+
+	for url, funcHandler := range urlMap {
+		http.Handle(url, funcHandler)
+	}
 }
