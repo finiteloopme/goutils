@@ -43,7 +43,9 @@ func Process(prefixEnvVar string, structRecord interface{}, _configFilename ...s
 	} else {
 		configFilename := "./config.yaml"
 		file, err = ProcessFileconfig(configFilename)
-		log.Warn("error reading default config file. ", err)
+		if err != nil {
+			log.Warn("error reading default config file. ", err)
+		}
 		// Don't return error
 		// Might be using ENV variables
 	}
