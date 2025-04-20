@@ -96,6 +96,11 @@ func defineFlags(spec interface{}) error {
 			continue // No flag defined for this field
 		}
 
+		if flag.Lookup(flagName) != nil {
+			// Flag already defined
+			continue // Skip this field
+		}
+
 		// Prevent duplicate flag definition
 		if _, exists := flagValues[flagName]; exists {
 			// This could happen if Load is called multiple times with overlapping flag names

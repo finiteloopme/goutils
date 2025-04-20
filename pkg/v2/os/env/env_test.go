@@ -166,7 +166,7 @@ package env
 // 	resetFlags()
 // 	var cfg TestConfig
 // 	ctx := context.Background()
-// 	err := Load(ctx, "TEST_", &cfg) // No env, flags, or secrets set
+// 	err := ProcessConfig(ctx, "TEST_", &cfg) // No env, flags, or secrets set
 
 // 	if err != nil {
 // 		// Expecting required field errors
@@ -215,7 +215,7 @@ package env
 
 // 	var cfg TestConfig
 // 	ctx := context.Background()
-// 	err := Load(ctx, "TEST_", &cfg) // No flags or secrets
+// 	err := ProcessConfig(ctx, "TEST_", &cfg) // No flags or secrets
 
 // 	if err != nil {
 // 		t.Fatalf("Load failed: %v", err)
@@ -324,7 +324,7 @@ package env
 
 // 	var cfg TestConfig
 // 	ctx := context.Background()
-// 	err := Load(ctx, "TEST_", &cfg)
+// 	err := ProcessConfig(ctx, "TEST_", &cfg)
 
 // 	// Expecting error because APIKey is required but not provided by flag
 // 	if err != nil {
@@ -408,7 +408,7 @@ package env
 // 	setenv(t, "TEST_REQUIRED", "env-required-for-secret-test") // Required, but not a secret
 
 // 	var cfg TestConfig
-// 	err := Load(ctx, "TEST_", &cfg)
+// 	err := ProcessConfig(ctx, "TEST_", &cfg)
 
 // 	// Expecting error because SecretErr tries to access a non-existent secret
 // 	if err != nil {
@@ -484,7 +484,7 @@ package env
 // 	flag.Parse()
 
 // 	var cfg TestConfig
-// 	err := Load(ctx, "TEST_", &cfg) // Prefix is TEST_
+// 	err := ProcessConfig(ctx, "TEST_", &cfg) // Prefix is TEST_
 
 // 	if err != nil {
 // 		t.Fatalf("Load failed: %v", err)
@@ -515,19 +515,19 @@ package env
 // 	resetFlags()
 // 	ctx := context.Background()
 // 	var cfg TestConfig // Not a pointer
-// 	err := Load(ctx, "", cfg)
+// 	err := ProcessConfig(ctx, "", cfg)
 // 	if !errors.Is(err, errInvalidSpecification) {
 // 		t.Errorf("Expected errInvalidSpecification for non-pointer spec, got %v", err)
 // 	}
 
 // 	var i int // Not a struct
-// 	err = Load(ctx, "", &i)
+// 	err = ProcessConfig(ctx, "", &i)
 // 	if !errors.Is(err, errInvalidSpecification) {
 // 		t.Errorf("Expected errInvalidSpecification for non-struct pointer spec, got %v", err)
 // 	}
 
 // 	var nilPtr *TestConfig // Nil pointer
-// 	err = Load(ctx, "", nilPtr)
+// 	err = ProcessConfig(ctx, "", nilPtr)
 // 	if !errors.Is(err, errInvalidSpecification) {
 // 		t.Errorf("Expected errInvalidSpecification for nil pointer spec, got %v", err)
 // 	}
@@ -540,7 +540,7 @@ package env
 // 	// Test case 1: Env var is set
 // 	setenv(t, "TEST_OPTIONAL", "hello pointer")
 // 	var cfg1 TestConfig
-// 	err1 := Load(ctx, "TEST_", &cfg1)
+// 	err1 := ProcessConfig(ctx, "TEST_", &cfg1)
 // 	if err1 != nil && !strings.Contains(err1.Error(), "APIKey") && !strings.Contains(err1.Error(), "Required") {
 // 		// Ignore required errors for this specific test focus
 // 		t.Fatalf("Load failed unexpectedly: %v", err1)
@@ -554,7 +554,7 @@ package env
 
 // 	// Test case 2: Env var is not set
 // 	var cfg2 TestConfig
-// 	err2 := Load(ctx, "TEST_", &cfg2)
+// 	err2 := ProcessConfig(ctx, "TEST_", &cfg2)
 // 	// Ignore required field errors
 // 	if err2 != nil && !strings.Contains(err2.Error(), "APIKey") && !strings.Contains(err2.Error(), "Required") {
 // 		t.Fatalf("Load failed unexpectedly: %v", err2)
