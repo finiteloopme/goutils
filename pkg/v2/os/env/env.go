@@ -96,9 +96,11 @@ func defineFlags(spec interface{}) error {
 			continue // No flag defined for this field
 		}
 
-		if flag.Lookup(flagName) != nil {
-			// Flag already defined
-			continue // Skip this field
+		if flg := flag.Lookup(flagName); flg != nil {
+			// Flag already defined on command line
+			flagWasSet[flagName] = true      // Mark as set
+			flagValues[flagName] = flg.Value // Set the value
+			continue                         // Skip this field
 		}
 
 		// Prevent duplicate flag definition
