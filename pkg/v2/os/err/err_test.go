@@ -29,7 +29,7 @@ func TestExitIfError(t *testing.T) {
 				t.Errorf("ExitIfError(nil) panicked unexpectedly: %v", r)
 			}
 		}()
-		ExitIfError(nil) // Call the function with nil
+		PanicIfError("Test", nil) // Call the function with nil
 	}() // Execute the anonymous function immediately
 
 	// Test case 2: Input is a non-nil error (should panic)
@@ -47,6 +47,6 @@ func TestExitIfError(t *testing.T) {
 				t.Errorf("ExitIfError(testErr) panicked with unexpected value: got %v, want %v", r, testErr)
 			}
 		}()
-		ExitIfError(testErr) // Call the function with the error
+		PanicIfError("Test", testErr) // Call the function with the error
 	}() // Execute the anonymous function immediately
 }
